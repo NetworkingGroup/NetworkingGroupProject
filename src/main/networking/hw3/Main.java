@@ -12,14 +12,17 @@ public class Main {
         String baseUrl = "someUrl"; //user provided url for getting data
         int maxIndex =  20; //user provided limit to the amount of data they want
         for(int i = 0; i < maxIndex; i++){
-            log.add(-2);//initilize every index to "ready to be worked on"
+            log.add(-2);//initialize every index to "ready to be worked on"
         }
-        Anylitics a = new Anylitics(baseUrl);
+        Analytics a = new Analytics(baseUrl);
         //only stop if all the pending chunks are gone, all of the ready chunks are done
         while (log.contains(-1) && log.contains(-2)) {
             int toWorkOn = -1;
-            toWorkOn = log.indexOf(0);
-            a.anylize(toWorkOn*CHUNK_SIZE, (1+toWorkOn)*CHUNK_SIZE); //analyze chunk, run in background if possible
+            //if there is a waiting chunk analyze it
+            toWorkOn = log.indexOf(-2);
+            if(toWorkOn != -1){
+                log.set(toWorkOn, a.anylize(toWorkOn*CHUNK_SIZE, (1+toWorkOn)*CHUNK_SIZE)); //analyze chunk, run in background if possible
+            }
             //send proposition
             //check for join requests
             //check for response to propositions
