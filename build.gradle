@@ -1,0 +1,26 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = "networking.hw3.Main"
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+sourceSets{
+    main{
+        java{
+            srcDir 'src/main'
+        }
+        resources{
+            srcDir 'src/resources'
+        }
+    }
+}
+
+dependencies {
+    compile 'org.slf4j:slf4j-api:latest.release'
+
+    testCompile 'junit:junit:latest.release'
+}
