@@ -18,14 +18,5 @@
         <processorPath useClasspath="true" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="client_main" target="1.5" />
-      <module name="client_test" target="1.5" />
-      <module name="NetworkingGroupProject_main" target="1.8" />
-      <module name="NetworkingGroupProject_src" target="1.8" />
-      <module name="NetworkingGroupProject_test" target="1.8" />
-      <module name="server_main" target="1.5" />
-      <module name="server_test" target="1.5" />
-    </bytecodeTargetLevel>
   </component>
 </project>
