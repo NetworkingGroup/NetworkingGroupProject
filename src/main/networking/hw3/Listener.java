@@ -4,7 +4,6 @@ package networking.hw3;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.MulticastSocket;
-import java.util.Arrays;
 
 public class Listener extends Thread {
 
@@ -29,8 +28,12 @@ public class Listener extends Thread {
                 DatagramPacket packet = new DatagramPacket(b, b.length);
 
                 socket.receive(packet);
+                b = packet.getData();
+                System.out.println(b[0]);
+                System.out.println(b[1]);
+                System.out.println(b[2]);
+                System.out.println(b[3]);
 
-                System.out.println(Arrays.toString(packet.getData()));
                 // dissect packet and perform an action
             } catch (IOException e) {
                 System.out.println("ending");
