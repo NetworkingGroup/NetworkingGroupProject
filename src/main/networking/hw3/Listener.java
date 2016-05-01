@@ -4,6 +4,7 @@ package networking.hw3;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.MulticastSocket;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 public class Listener extends Thread {
@@ -29,9 +30,26 @@ public class Listener extends Thread {
                 DatagramPacket packet = new DatagramPacket(b, b.length);
 
                 socket.receive(packet);
-
-                System.out.println(Arrays.toString(packet.getData()));
-                // dissect packet and perform an action
+                b = packet.getData();
+                int opCode = b[0];
+                if(opCode == 1){
+                    byte[] resp = PacketHandler.respondToJoin();
+                    //TODO send resp
+                } else if(opCode == 3){
+                    byte[] resp = Proposition.recvProp(ByteBuffer.wrap(b)).array();
+                    //TODO send resp
+                } else if(opCode == 4){
+                    int resp = Proposition.recvPropNack(ByteBuffer.wrap(b));
+                    if(resp == 0){
+                        //stop working and pick a new chunk
+                        //TODO make a method for this
+                    }
+                } else if(opCode == 5){
+                    int resp = Proposition.recvComp(ByteBuffer.wrap(b));
+                    if(resp == 0){
+                        //TODO ""
+                    }
+                }
             } catch (IOException e) {
                 System.out.println("ending");
             }
