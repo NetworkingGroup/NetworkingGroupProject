@@ -13,7 +13,10 @@ public class Main {
 
         String baseUrl = "someUrl"; //user provided url for getting data
         int maxIndex =  20; //user provided limit to the amount of data they want
-        if(host != 0){
+        for(int i = 0; i < maxIndex; i++) {
+            log.add(-2);//initialize every index to "ready to be worked on"
+        }
+        if(host != 0) {
             //send join request, keep sending until there is a response
             //copy response to log
         } else {
@@ -30,9 +33,12 @@ public class Main {
             if(toWorkOn != -1){
                 //send proposition
                 log.set(toWorkOn, -1);
-                log.set(toWorkOn, a.anylize(toWorkOn*CHUNK_SIZE, (1+toWorkOn)*CHUNK_SIZE)); //analyze chunk
+                log.set(toWorkOn, a.analyze(toWorkOn*CHUNK_SIZE, (1+toWorkOn)*CHUNK_SIZE)); //analyze chunk
             }
             //make listeners for all of these while the analytics are being run
+            toWorkOn = log.indexOf(0);
+            a.analyze(toWorkOn*CHUNK_SIZE, (1+toWorkOn)*CHUNK_SIZE); //analyze chunk, run in background if possible
+            //send proposition
             //check for join requests
             //check for response to propositions
             //check of other propositions
