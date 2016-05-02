@@ -19,6 +19,7 @@ public class Proposition {
         if(Main.log.get(chunkIndex) == -2){
             //this means the chunk is free to be worked on
             Main.log.set(chunkIndex, -1);
+            Main.timers[chunkIndex] = System.currentTimeMillis();
             //should set timer for it
             return null;
         } else if (Main.log.get(chunkIndex) == -1){
