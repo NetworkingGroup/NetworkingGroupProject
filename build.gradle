@@ -1,7 +1,8 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = "networking.hw3.Main"
+//mainClassName = "networking.hw3.Main"
+mainClassName = "networking.hw3.util.MrApiMan"
 
 repositories {
     jcenter()
@@ -21,6 +22,11 @@ sourceSets{
 
 dependencies {
     compile 'org.slf4j:slf4j-api:latest.release'
+
+    compile 'com.google.api-client:google-api-client:1.19.1'
+    compile 'com.google.apis:google-api-services-youtubeAnalytics:v1-rev59-1.21.0'
+    compile 'com.google.oauth-client:google-oauth-client-jetty:1.21.0'
+    compile 'com.google.guava:guava:19.0'
 
     testCompile 'junit:junit:latest.release'
 }
