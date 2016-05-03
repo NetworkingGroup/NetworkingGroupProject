@@ -33,6 +33,7 @@ public class MrApiMan {
         Credential credential = Auth.authorize(scopes, 8080);
 
 
+
         analytics = new YouTubeAnalytics.Builder(transport, factory, credential)
                 .setApplicationName("networkinggroupproject")
                 .build();
@@ -54,7 +55,7 @@ public class MrApiMan {
 
     public ResultTable test() throws IOException {
         return analytics.reports()
-                .query("channel==UC-lHJZR3Gqxm24_Vd_AJ5Yw",
+                .query("channel==UCxaVOVnhmT0-HCUv72jtOTA",
                         "2015-01-10",
                         "2015-02-10",
                         "views")
