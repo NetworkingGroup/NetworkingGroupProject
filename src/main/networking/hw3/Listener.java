@@ -52,12 +52,14 @@ public class Listener extends Thread {
                     int resp = Proposition.recvPropNack(ByteBuffer.wrap(b));
                     if(resp == 0){
                         //stop working and pick a new chunk, but ignore if some condition is met
-                        //TODO make a method for this
+                        Analytics.future.cancel(true);
                     }
                 } else if(opCode == 5){
                     int resp = Proposition.recvComp(ByteBuffer.wrap(b));
                     if(resp == 0){
-                        //TODO ""
+                        //stop working and pick a new chunk, but ignore if some condition is met
+
+                        Analytics.future.cancel(true);
                     }
                 }
             } catch (IOException e) {

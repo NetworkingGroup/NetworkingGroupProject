@@ -9,6 +9,7 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 public class Main {
 
@@ -16,7 +17,7 @@ public class Main {
     static ArrayList<Integer> log;
     static int currentChunk = -1;
     static long[] timers;
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
         //each value result will go in here, -1 means the chunk is being worked on, -2 means it is free to be worked on
         log = new ArrayList<>();
         int host = 0;//host provided by the user, if there is none this machine is the first node in the cluster
@@ -77,7 +78,7 @@ public class Main {
                 }
             }
         }
-        Analytics a = new Analytics(baseUrl);
+        Analytics a = new Analytics();
 
         Listener listener = new Listener(socket);
         //only stop if all the pending chunks are gone, all of the ready chunks are done
@@ -108,7 +109,7 @@ public class Main {
                 Proposition.sendProp(toWorkOn);//send this
                 currentChunk = toWorkOn;
                 log.set(toWorkOn, -1);
-                int result = a.analyze(toWorkOn*CHUNK_SIZE, (1+toWorkOn)*CHUNK_SIZE);//analyze chunk
+                int result = a.analyze(toWorkOn);//analyze chunk
                 if (result != -1){ //if it returned a -1 that means it was terminated early
                     log.set(toWorkOn, result);
                     Proposition.sendComp(toWorkOn, log.get(toWorkOn));//send this
