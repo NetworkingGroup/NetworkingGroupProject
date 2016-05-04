@@ -3,9 +3,7 @@ package networking.hw3;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-/**
- * Created by keithmartin on 4/28/16.
- */
+
 public class PacketHandler {
 
 

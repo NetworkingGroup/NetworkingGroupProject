@@ -3,9 +3,7 @@ package networking.hw3;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-/**
- * Created by Nicholas on 4/30/2016.
- */
+
 public class Proposition {
     static final byte PROP_CODE = 3;
     static final byte PROP_NACK_CODE = 4;
