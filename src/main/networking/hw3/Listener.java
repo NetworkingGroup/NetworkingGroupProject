@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class Listener extends Thread {
 
     private MulticastSocket socket;
-    private final int MAX_PACKET_SIZE = 1472;
+    private final int MAX_PACKET_SIZE = 153;
 
     public Listener(MulticastSocket s){
         this.socket = s;
@@ -29,15 +29,25 @@ public class Listener extends Thread {
 
                 DatagramPacket packet = new DatagramPacket(b, b.length);
 
+                DatagramPacket respPacket;
+
                 socket.receive(packet);
                 b = packet.getData();
                 int opCode = b[0];
                 if(opCode == 1){
                     byte[] resp = PacketHandler.respondToJoin();
-                    //TODO send resp
+
+                    respPacket = new DatagramPacket(resp, resp.length);
+
+                    socket.send(respPacket);
                 } else if(opCode == 3){
                     byte[] resp = Proposition.recvProp(ByteBuffer.wrap(b)).array();
-                    //TODO send resp
+
+                    if (resp != null){
+                        respPacket = new DatagramPacket(resp, resp.length);
+
+                        socket.send(respPacket);
+                    }
                 } else if(opCode == 4){
                     int resp = Proposition.recvPropNack(ByteBuffer.wrap(b));
                     if(resp == 0){

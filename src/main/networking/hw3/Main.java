@@ -1,6 +1,11 @@
 package networking.hw3;
 
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Random;
@@ -19,6 +24,22 @@ public class Main {
         String region = args[2];
         int month = Integer.parseInt(args[3]);
         int year = Integer.parseInt(args[4]);
+        MulticastSocket socket = null;
+        InetAddress ip = null;
+
+        try {
+            ip = InetAddress.getByName("273.1.1.1");
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            socket = new MulticastSocket(2706);
+
+            socket.joinGroup(ip);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         String baseUrl = "someUrl"; //user provided url for getting data
         int maxIndex =  20; //user provided limit to the amount of data they want
@@ -28,13 +49,37 @@ public class Main {
             timers[i] = 0;
         }
         if(host != 0){
-            byte[] request = PacketHandler.requestToJoin();
-            //TODO send request
-            //TODO receive response to join
-            byte[] resp = null;
-            PacketHandler.takeInResponse(ByteBuffer.wrap(resp));
+            byte[] requestBytes = PacketHandler.requestToJoin();
+
+            byte [] receiveBytes = new byte[153];
+
+            DatagramPacket requestPacket = new DatagramPacket(requestBytes, requestBytes.length);
+
+            DatagramPacket receivePacket = new DatagramPacket(receiveBytes, receiveBytes.length);
+
+            for (;;){
+                try{
+                    socket.send(requestPacket);
+
+                    socket.setSoTimeout(1000);
+
+                    socket.receive(receivePacket);
+
+                    int opCode = receivePacket.getData()[0];
+
+                    if (opCode == 2){
+                        PacketHandler.takeInResponse(ByteBuffer.wrap(receivePacket.getData()));
+
+                        break;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         Analytics a = new Analytics(baseUrl);
+
+        Listener listener = new Listener(socket);
         //only stop if all the pending chunks are gone, all of the ready chunks are done
         while (log.contains(-1) && log.contains(-2)) {
 
