@@ -3,9 +3,7 @@ package networking.hw3;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-/**
- * Created by Nicholas on 4/30/2016.
- */
+
 public class Proposition {
     static final byte PROP_CODE = 3;
     static final byte PROP_NACK_CODE = 4;
@@ -19,6 +17,7 @@ public class Proposition {
         if(Main.log.get(chunkIndex) == -2){
             //this means the chunk is free to be worked on
             Main.log.set(chunkIndex, -1);
+            Main.timers[chunkIndex] = System.currentTimeMillis();
             //should set timer for it
             return null;
         } else if (Main.log.get(chunkIndex) == -1){
