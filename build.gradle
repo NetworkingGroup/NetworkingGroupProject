@@ -21,6 +21,9 @@ sourceSets{
 
 dependencies {
     compile 'org.slf4j:slf4j-api:latest.release'
+    compile 'com.google.guava:guava:19.0'
+    compile 'commons-io:commons-io:2.5'
+    compile 'com.google.code.gson:gson:2.6.2'
 
     testCompile 'junit:junit:latest.release'
 }
