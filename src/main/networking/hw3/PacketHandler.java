@@ -14,11 +14,11 @@ public class PacketHandler {
     }
 
     public static byte[] respondToJoin() {
-        byte[] respondJoin = new byte[Main.log.size() + 1];
+        byte[] respondJoin = new byte[Main.log.size()*8 + 1];
         respondJoin[0] = 2;
 
         for (int i = 0; i < Main.log.size(); i++) {
-            respondJoin[i+1] = Main.log.get(i).byteValue();
+            respondJoin[(i*8)+1] = Main.log.get(i).byteValue();
         }
 
         return respondJoin;
@@ -26,7 +26,7 @@ public class PacketHandler {
 
     public static void takeInResponse(ByteBuffer responseToJoin) {
         for (int i = 0; i < responseToJoin.limit() ; i++) {
-            Main.log.set(i,responseToJoin.getInt(1+(i*4)));
+            Main.log.set(i,responseToJoin.getLong(1+(i*8)));
         }
     }
 

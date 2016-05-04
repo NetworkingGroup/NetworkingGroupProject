@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutionException;
 public class Main {
 
     static final int CHUNK_SIZE = 12;//random size for each chunk
-    static ArrayList<Integer> log;
+    static ArrayList<Long> log;
     static int currentChunk = -1;
     static long[] timers;
     public static void main(String[] args) throws ExecutionException, InterruptedException {
@@ -43,10 +43,10 @@ public class Main {
         }
 
         String baseUrl = "someUrl"; //user provided url for getting data
-        int maxIndex =  20; //user provided limit to the amount of data they want
+        int maxIndex =  19; //user provided limit to the amount of data they want
         timers = new long[maxIndex];
         for (int i = 0; i < maxIndex; i++) {
-            log.add(-2);//initialize every index to "ready to be worked on"
+            log.add(-2l);//initialize every index to "ready to be worked on"
             timers[i] = 0;
         }
         if(host != 0){
@@ -82,34 +82,34 @@ public class Main {
 
         Listener listener = new Listener(socket);
         //only stop if all the pending chunks are gone, all of the ready chunks are done
-        while (log.contains(-1) && log.contains(-2)) {
+        while (log.contains(-1l) && log.contains(-2l)) {
 
             int toWorkOn = -1;
             //if there is a waiting chunk analyze it
             Random ran = new Random();
             //pick a random index
             toWorkOn = ran.nextInt(log.size());
-            while(log.get(toWorkOn) != -2){
+            while(log.get(toWorkOn) != -2l){
                 //if it is pending check that it has not been more than ten seconds
-                if(log.get(toWorkOn) == -1){
+                if(log.get(toWorkOn) == -1l){
                     if(System.currentTimeMillis() - timers[toWorkOn] > 10){
-                        log.set(toWorkOn, -2);
+                        log.set(toWorkOn, -2l);
                         break;
                     }
                 }
                 //check that there are still things left to work on
-                if (!log.contains(-1) && !log.contains(-2)) {
+                if (!log.contains(-1l) && !log.contains(-2l)) {
                     toWorkOn = -1;
                     break;
                 }
                 //pick a new random index
                 toWorkOn = ran.nextInt(log.size());
             }
-            if(toWorkOn != -1){
+            if(toWorkOn != -1l){
                 Proposition.sendProp(toWorkOn);//send this
                 currentChunk = toWorkOn;
-                log.set(toWorkOn, -1);
-                int result = a.analyze(toWorkOn);//analyze chunk
+                log.set(toWorkOn, -1l);
+                long result = a.analyze(toWorkOn);//analyze chunk
                 if (result != -1){ //if it returned a -1 that means it was terminated early
                     log.set(toWorkOn, result);
                     Proposition.sendComp(toWorkOn, log.get(toWorkOn));//send this

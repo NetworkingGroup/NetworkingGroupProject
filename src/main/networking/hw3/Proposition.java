@@ -13,14 +13,14 @@ public class Proposition {
     }
     //returns the byte buffer that shold be sent, null means nothing should be sent
     public static ByteBuffer recvProp(ByteBuffer prop){
-        int chunkIndex = prop.getInt(1);
-        if(Main.log.get(chunkIndex) == -2){
+        int chunkIndex = prop.get(1);
+        if(Main.log.get(chunkIndex) == -2l){
             //this means the chunk is free to be worked on
-            Main.log.set(chunkIndex, -1);
+            Main.log.set(chunkIndex, -1l);
             Main.timers[chunkIndex] = System.currentTimeMillis();
             //should set timer for it
             return null;
-        } else if (Main.log.get(chunkIndex) == -1){
+        } else if (Main.log.get(chunkIndex) == -1l){
             //this means it is already being worked on
             if(chunkIndex == Main.currentChunk){
                 //this means the chunk is already being worked on by you
@@ -29,7 +29,7 @@ public class Proposition {
             return null;
         } else {
             //this means there is already data for this chunk
-            return ByteBuffer.allocate(9).put(COMP_CODE).putInt(chunkIndex).putInt(Main.log.get(chunkIndex));
+            return ByteBuffer.allocate(13).put(COMP_CODE).putInt(chunkIndex).putLong(Main.log.get(chunkIndex));
         }
     }
     //0 means to stop working ont he current chunk, otherwise continue
@@ -37,13 +37,13 @@ public class Proposition {
         int result = Integer.compare(nack.getInt(1), Main.currentChunk);
         return result;
     }
-    public static ByteBuffer sendComp(int chunkIndex, int data){
-        return ByteBuffer.allocate(9).put(COMP_CODE).putInt(chunkIndex).putInt(data);
+    public static ByteBuffer sendComp(int chunkIndex, long data){
+        return ByteBuffer.allocate(13).put(COMP_CODE).putInt(chunkIndex).putLong(data);
     }
     //0 means to stop working ont he current chunk, otherwise continue
     public static int recvComp(ByteBuffer comp){
         int chunkIndex = comp.getInt(1);
-        Main.log.set(chunkIndex, comp.getInt(5));
+        Main.log.set(chunkIndex, comp.getLong(5));
         return Integer.compare(chunkIndex, Main.currentChunk);
     }
 }
