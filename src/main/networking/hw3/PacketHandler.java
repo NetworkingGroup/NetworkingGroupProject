@@ -1,7 +1,6 @@
 package networking.hw3;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 
 
 public class PacketHandler {
@@ -14,18 +13,17 @@ public class PacketHandler {
     }
 
     public static byte[] respondToJoin() {
-        byte[] respondJoin = new byte[Main.log.size()*8 + 1];
-        respondJoin[0] = 2;
-
+        ByteBuffer respondJoin = ByteBuffer.allocate(153);
+        respondJoin.put((byte)2);
         for (int i = 0; i < Main.log.size(); i++) {
-            respondJoin[(i*8)+1] = Main.log.get(i).byteValue();
+            respondJoin.putLong((i*8)+1, Main.log.get(i));
         }
 
-        return respondJoin;
+        return respondJoin.array();
     }
 
     public static void takeInResponse(ByteBuffer responseToJoin) {
-        for (int i = 0; i < responseToJoin.limit() ; i++) {
+        for (int i = 0; i < Main.maxIndex ; i++) {
             Main.log.set(i,responseToJoin.getLong(1+(i*8)));
         }
     }

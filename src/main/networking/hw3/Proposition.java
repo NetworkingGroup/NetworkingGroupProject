@@ -1,7 +1,6 @@
 package networking.hw3;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 
 
 public class Proposition {
@@ -17,6 +16,7 @@ public class Proposition {
         if(Main.log.get(chunkIndex) == -2l){
             //this means the chunk is free to be worked on
             Main.log.set(chunkIndex, -1l);
+            // // TODO look at this 
             Main.timers[chunkIndex] = System.currentTimeMillis();
             //should set timer for it
             return null;

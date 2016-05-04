@@ -1,7 +1,6 @@
 package networking.hw3;
 
 
-import java.util.Random;
 import java.util.concurrent.*;
 
 /**
@@ -13,15 +12,17 @@ public class Analytics {
 
     static Future future;
 
-    public int analyze (int index) throws ExecutionException, InterruptedException {
+    public long analyze (int index) throws ExecutionException, InterruptedException {
         YoutubeTask task = new YoutubeTask(index);
         future = threadpool.submit(task);
-        int viewCount;
+        long viewCount;
         try {
-            viewCount = (Integer) future.get();
+            viewCount = (long) future.get();
         } catch (final InterruptedException ex) {
             return -1;
         } catch (final ExecutionException ex) {
+            return -1;
+        } catch(CancellationException ce){
             return -1;
         }
         return viewCount;

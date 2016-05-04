@@ -35,7 +35,7 @@ public class ClientTest {
             e.printStackTrace();
         }
 
-        Listener listener = new Listener(socket);
+        Listener listener = new Listener(socket,0,null);
 
         try {
             String line;

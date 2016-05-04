@@ -3,6 +3,7 @@ package networking.hw3;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -11,9 +12,15 @@ public class Listener extends Thread {
 
     private MulticastSocket socket;
     private final int MAX_PACKET_SIZE = 153;
+    private int port;
+    private InetAddress ip ;
 
-    public Listener(MulticastSocket s){
+    public Listener(MulticastSocket s, int port, InetAddress ip){
         this.socket = s;
+
+        this.port = port;
+
+        this.ip = ip;
 
         this.start();
     }
@@ -30,40 +37,45 @@ public class Listener extends Thread {
                 DatagramPacket packet = new DatagramPacket(b, b.length);
 
                 DatagramPacket respPacket;
-
                 socket.receive(packet);
                 b = packet.getData();
-                int opCode = b[0];
+                int opCode = java.nio.ByteBuffer.wrap(Arrays.copyOfRange(packet.getData(), 0, 1)).get();
+                System.out.println("received " + opCode);
                 if(opCode == 1){
                     byte[] resp = PacketHandler.respondToJoin();
 
-                    respPacket = new DatagramPacket(resp, resp.length);
+                    respPacket = new DatagramPacket(resp, resp.length, ip, port);
 
                     socket.send(respPacket);
                 } else if(opCode == 3){
-                    byte[] resp = Proposition.recvProp(ByteBuffer.wrap(b)).array();
+                    System.out.println("receive prop ");
+                    ByteBuffer bb = Proposition.recvProp(ByteBuffer.wrap(b));
 
-                    if (resp != null){
-                        respPacket = new DatagramPacket(resp, resp.length);
+                    if (bb != null){
+                        byte [] resp = bb.array();
+
+                        respPacket = new DatagramPacket(resp, resp.length, ip, port);
 
                         socket.send(respPacket);
                     }
                 } else if(opCode == 4){
+                    System.out.println("receive prop nack");
                     int resp = Proposition.recvPropNack(ByteBuffer.wrap(b));
                     if(resp == 0){
                         //stop working and pick a new chunk, but ignore if some condition is met
                         Analytics.future.cancel(true);
                     }
                 } else if(opCode == 5){
+                    System.out.println("receive comp");
                     int resp = Proposition.recvComp(ByteBuffer.wrap(b));
                     if(resp == 0){
                         //stop working and pick a new chunk, but ignore if some condition is met
-
+                        System.out.println("received comp nack");
                         Analytics.future.cancel(true);
                     }
                 }
             } catch (IOException e) {
-                System.out.println("ending");
+
             }
         }
 
