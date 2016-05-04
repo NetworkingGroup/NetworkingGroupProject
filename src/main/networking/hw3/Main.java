@@ -22,9 +22,6 @@ public class Main {
         log = new ArrayList<>();
         int host = 0;//host provided by the user, if there is none this machine is the first node in the cluster
         host = Integer.parseInt(args[1]);
-        String region = args[2];
-        int month = Integer.parseInt(args[3]);
-        int year = Integer.parseInt(args[4]);
         MulticastSocket socket = null;
         InetAddress ip = null;
 
@@ -116,5 +113,9 @@ public class Main {
                 }
             }
         }
+        for(int i = 0;i<log.size();i++){
+            System.out.println(log.get(i));
+        }
     }
+
 }
