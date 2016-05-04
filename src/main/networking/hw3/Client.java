@@ -47,7 +47,7 @@ public class Client {
 
             // for sending
             byte[] sequenceNumber = ByteBuffer.allocate(4).putInt(Integer.parseInt(line)).array();
-            DatagramPacket packet = new DatagramPacket(sequenceNumber, 4, host, PORT);
+            DatagramPacket packet = new DatagramPacket(sequenceNumber, sequenceNumber.length, host, PORT);
 
             // for receiving
 //        byte [] b = new byte[4];
