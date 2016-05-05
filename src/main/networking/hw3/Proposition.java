@@ -44,6 +44,8 @@ public class Proposition {
     public static int recvComp(ByteBuffer comp){
         int chunkIndex = comp.getInt(1);
         Main.log.set(chunkIndex, comp.getLong(5));
+
+
         return Integer.compare(chunkIndex, Main.currentChunk);
     }
 }

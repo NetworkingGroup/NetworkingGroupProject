@@ -48,7 +48,7 @@ public class Listener extends Thread {
 
                     socket.send(respPacket);
                 } else if(opCode == 3){
-                    System.out.println("receive prop ");
+//                    System.out.println("receive prop ");
                     ByteBuffer bb = Proposition.recvProp(ByteBuffer.wrap(b));
 
                     if (bb != null){
@@ -59,18 +59,18 @@ public class Listener extends Thread {
                         socket.send(respPacket);
                     }
                 } else if(opCode == 4){
-                    System.out.println("receive prop nack");
+//                    System.out.println("receive prop nack");
                     int resp = Proposition.recvPropNack(ByteBuffer.wrap(b));
                     if(resp == 0){
                         //stop working and pick a new chunk, but ignore if some condition is met
                         Analytics.future.cancel(true);
                     }
                 } else if(opCode == 5){
-                    System.out.println("receive comp");
+//                    System.out.println("receive comp");
                     int resp = Proposition.recvComp(ByteBuffer.wrap(b));
                     if(resp == 0){
                         //stop working and pick a new chunk, but ignore if some condition is met
-                        System.out.println("received comp nack");
+//                        System.out.println("received comp nack");
                         Analytics.future.cancel(true);
                     }
                 }

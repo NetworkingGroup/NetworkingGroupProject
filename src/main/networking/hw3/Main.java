@@ -33,7 +33,7 @@ public class Main {
         InetAddress ip = null;
 
         try {
-            ip = InetAddress.getByName("239.0.0.0");
+            ip = InetAddress.getByName("239.0.0.1");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -109,7 +109,7 @@ public class Main {
                 toWorkOn = ran.nextInt(log.size());
             }
             if(toWorkOn != -1l){
-                System.out.println( "working on " + log.get(toWorkOn));
+//                System.out.println( "working on " + log.get(toWorkOn));
                 byte [] propByte = Proposition.sendProp(toWorkOn).array();
 
                 DatagramPacket prop = new DatagramPacket(propByte,propByte.length,ip,port);

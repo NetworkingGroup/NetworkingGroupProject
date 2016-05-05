@@ -58,7 +58,7 @@ public class Query {
                 total += statistics.get(Keys.VIEW_COUNT).getAsLong();
             }
 
-            System.out.println("Count So far:" + total);
+//            System.out.println("Count So far:" + total);
 
         } while (nextPageToken.isPresent());
 
