@@ -126,7 +126,7 @@ public class Main {
                     log.set(toWorkOn, result);
                     byte [] compByte = Proposition.sendComp(toWorkOn, log.get(toWorkOn)).array();
 
-                    DatagramPacket comp = new DatagramPacket(compByte, compByte.length, ip, host);
+                    DatagramPacket comp = new DatagramPacket(compByte, compByte.length, ip, port);
 
                     try {
                         socket.send(comp);
@@ -147,7 +147,7 @@ public class Main {
         }
 
         socket.close();
-        System.out.println("hey");
+
         listener.stopThread();
     }
 
