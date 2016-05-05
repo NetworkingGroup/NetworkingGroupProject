@@ -19,10 +19,13 @@ public class Analytics {
         try {
             viewCount = (long) future.get();
         } catch (final InterruptedException ex) {
+            System.out.println(ex);
             return -1;
         } catch (final ExecutionException ex) {
+            System.out.println(ex);
             return -1;
         } catch(CancellationException ce){
+            System.out.println(ce);
             return -1;
         }
         return viewCount;

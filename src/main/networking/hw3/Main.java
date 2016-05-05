@@ -33,7 +33,7 @@ public class Main {
         MulticastSocket socket = null;
         InetAddress ip = null;
         try {
-            ip = InetAddress.getByName("239.0.0.0");
+            ip = InetAddress.getByName("238.0.0.0");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -114,6 +114,7 @@ public class Main {
                 toWorkOn = ran.nextInt(log.size());
             }
             if(toWorkOn != -1l){
+                System.out.println( "working on " + toWorkOn);
                 byte [] propByte = Proposition.sendProp(toWorkOn).array();
 
                 DatagramPacket prop = new DatagramPacket(propByte,propByte.length,ip,port);
@@ -126,6 +127,7 @@ public class Main {
                 currentChunk = toWorkOn;
 
                 long result = a.analyze(toWorkOn);//analyze chunk
+                System.out.println( "Result " + result);
                 if (result != -1){ //if it returned a -1 that means it was terminated early
                     log.set(toWorkOn, result);
                     byte [] compByte = Proposition.sendComp(toWorkOn, log.get(toWorkOn)).array();
