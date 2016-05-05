@@ -7,16 +7,16 @@ public class PacketHandler {
 
 
     public static byte[] requestToJoin() {
-        byte[] requestJoin = new byte[1];
-        requestJoin[0] = 1;
-        return requestJoin;
+
+        return ByteBuffer.allocate(9).put((byte)1).putLong(Main.macAddress).array();
     }
 
     public static byte[] respondToJoin() {
-        ByteBuffer respondJoin = ByteBuffer.allocate(153);
+        ByteBuffer respondJoin = ByteBuffer.allocate(161);
         respondJoin.put((byte)2);
+        respondJoin.putLong(Main.macAddress);
         for (int i = 0; i < Main.log.size(); i++) {
-            respondJoin.putLong((i*8)+1, Main.log.get(i));
+            respondJoin.putLong((i*8)+9, Main.log.get(i));
         }
 
         return respondJoin.array();
@@ -24,7 +24,7 @@ public class PacketHandler {
 
     public static void takeInResponse(ByteBuffer responseToJoin) {
         for (int i = 0; i < Main.maxIndex ; i++) {
-            Main.log.set(i,responseToJoin.getLong(1+(i*8)));
+            Main.log.set(i,responseToJoin.getLong(9+(i*8)));
         }
     }
 

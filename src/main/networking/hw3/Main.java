@@ -61,7 +61,7 @@ public class Main {
         if(host != 0){
             byte[] requestBytes = PacketHandler.requestToJoin();
 
-            byte [] receiveBytes = new byte[153];
+            byte [] receiveBytes = new byte[161];
 
             DatagramPacket requestPacket = new DatagramPacket(requestBytes, requestBytes.length,ip, port);
 
