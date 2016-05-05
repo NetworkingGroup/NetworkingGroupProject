@@ -32,8 +32,9 @@ public class Main {
         host = sc.nextInt();
         MulticastSocket socket = null;
         InetAddress ip = null;
+        System.out.println("1");
         try {
-            ip = InetAddress.getByName("239.0.0.0");
+            ip = InetAddress.getByName("237.2.1.0");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -56,6 +57,7 @@ public class Main {
         timers = new long[maxIndex];
         for (int i = 0; i < maxIndex; i++) {
             log.add(-2l);//initialize every index to "ready to be worked on"
+
             timers[i] = 0;
         }
         if(host != 0){
@@ -91,17 +93,23 @@ public class Main {
 
         Listener listener = new Listener(socket,port, ip);
         //only stop if all the pending chunks are gone, all of the ready chunks are done
+
+
         while (log.contains(-1l) || log.contains(-2l)) {
+
             int toWorkOn = -1;
             //if there is a waiting chunk analyze it
             Random ran = new Random();
             //pick a random index
             toWorkOn = ran.nextInt(log.size());
+
             while(log.get(toWorkOn) != -2l){
+
                 //if it is pending check that it has not been more than ten seconds
                 if(log.get(toWorkOn) == -1l){
                     if(System.currentTimeMillis() - timers[toWorkOn] > 10){
                         log.set(toWorkOn, -2l);
+
                         break;
                     }
                 }
@@ -114,6 +122,7 @@ public class Main {
                 toWorkOn = ran.nextInt(log.size());
             }
             if(toWorkOn != -1l){
+                System.out.println(toWorkOn);
                 byte [] propByte = Proposition.sendProp(toWorkOn).array();
 
                 DatagramPacket prop = new DatagramPacket(propByte,propByte.length,ip,port);
@@ -139,7 +148,9 @@ public class Main {
                     }
                 }
             }
+
         }
+
         for(int i = 0;i<log.size();i++){
             System.out.println(log.get(i));
         }
