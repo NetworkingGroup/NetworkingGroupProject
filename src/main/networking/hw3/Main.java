@@ -2,10 +2,7 @@ package networking.hw3;
 
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Random;
@@ -20,7 +17,11 @@ public class Main {
     static int currentChunk = -1;
     static long[] timers;
     static int maxIndex =  19; //user provided limit to the amount of data they want
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
+    static long macAddress;
+    static int count = 0;
+    public static void main(String[] args) throws ExecutionException, InterruptedException, UnknownHostException, SocketException {
+
+
         Scanner sc = new Scanner(System.in);
 
         int port = 2706;
@@ -31,9 +32,8 @@ public class Main {
         host = sc.nextInt();
         MulticastSocket socket = null;
         InetAddress ip = null;
-
         try {
-            ip = InetAddress.getByName("239.0.0.1");
+            ip = InetAddress.getByName("239.0.0.0");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -48,6 +48,11 @@ public class Main {
 
         String baseUrl = "someUrl"; //user provided url for getting data
 
+        InetAddress address = InetAddress.getLocalHost();
+        NetworkInterface nwi = NetworkInterface.getByInetAddress(address);
+        byte mac[] = nwi.getHardwareAddress();
+        macAddress = ByteBuffer.wrap(mac).getInt() + ByteBuffer.wrap(mac).getShort(4) + host;
+
         timers = new long[maxIndex];
         for (int i = 0; i < maxIndex; i++) {
             log.add(-2l);//initialize every index to "ready to be worked on"
@@ -56,7 +61,7 @@ public class Main {
         if(host != 0){
             byte[] requestBytes = PacketHandler.requestToJoin();
 
-            byte [] receiveBytes = new byte[153];
+            byte [] receiveBytes = new byte[161];
 
             DatagramPacket requestPacket = new DatagramPacket(requestBytes, requestBytes.length,ip, port);
 
@@ -109,7 +114,6 @@ public class Main {
                 toWorkOn = ran.nextInt(log.size());
             }
             if(toWorkOn != -1l){
-//                System.out.println( "working on " + log.get(toWorkOn));
                 byte [] propByte = Proposition.sendProp(toWorkOn).array();
 
                 DatagramPacket prop = new DatagramPacket(propByte,propByte.length,ip,port);
@@ -127,7 +131,7 @@ public class Main {
                     byte [] compByte = Proposition.sendComp(toWorkOn, log.get(toWorkOn)).array();
 
                     DatagramPacket comp = new DatagramPacket(compByte, compByte.length, ip, port);
-
+                    count++;
                     try {
                         socket.send(comp);
                     } catch (IOException e) {
