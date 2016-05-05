@@ -12,8 +12,6 @@ public class Proposition {
     }
     //returns the byte buffer that shold be sent, null means nothing should be sent
     public static ByteBuffer recvProp(ByteBuffer prop){
-
-        System.out.println("Got prop");
         int chunkIndex = prop.getInt(9);
         if(Main.log.get(chunkIndex) == -2l){
             //this means the chunk is free to be worked on
@@ -21,11 +19,9 @@ public class Proposition {
             // // TODO look at this 
             Main.timers[chunkIndex] = System.currentTimeMillis();
             //should set timer for it
-            System.out.println("Got prop for: " + chunkIndex);
             return null;
         } else if (Main.log.get(chunkIndex) == -1l){
             //this means it is already being worked on
-            System.out.println("Sending Nack for: " + chunkIndex);
             if(chunkIndex == Main.currentChunk){
                 //this means the chunk is already being worked on by you
                 return ByteBuffer.allocate(13).put(PROP_NACK_CODE).putLong(Main.macAddress).putInt(chunkIndex);
@@ -33,13 +29,11 @@ public class Proposition {
             return null;
         } else {
             //this means there is already data for this chunk
-            System.out.println("Sending comp Nack for: " + chunkIndex);
             return ByteBuffer.allocate(21).put(COMP_CODE).putLong(Main.macAddress).putInt(chunkIndex).putLong(Main.log.get(chunkIndex));
         }
     }
     //0 means to stop working ont he current chunk, otherwise continue
     public static int recvPropNack(ByteBuffer nack){
-        System.out.println("Got Nack for: " + nack.getInt(9));
         if(Main.maxIndex - Main.count <= 2) return 1;
         int result = Integer.compare(nack.getInt(9), Main.currentChunk);
         return result;
@@ -51,7 +45,6 @@ public class Proposition {
     public static int recvComp(ByteBuffer comp){
         int chunkIndex = comp.getInt(9);
         Main.log.set(chunkIndex, comp.getLong(13));
-        System.out.println("Got comp for: " + chunkIndex);
         Main.count++;
         return Integer.compare(chunkIndex, Main.currentChunk);
     }

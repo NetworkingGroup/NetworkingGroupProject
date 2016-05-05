@@ -114,7 +114,6 @@ public class Main {
                 toWorkOn = ran.nextInt(log.size());
             }
             if(toWorkOn != -1l){
-                System.out.println( "working on " + toWorkOn);
                 byte [] propByte = Proposition.sendProp(toWorkOn).array();
 
                 DatagramPacket prop = new DatagramPacket(propByte,propByte.length,ip,port);
