@@ -26,7 +26,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
 
         int multiPort = 2706;
-        int singlePort = 7001;
+        int singlePort = 7002;
         //each value result will go in here, -1 means the chunk is being worked on, -2 means it is free to be worked on
         log = new ArrayList<>();
         int host = 0;//host provided by the user, if there is none this machine is the first node in the cluster
