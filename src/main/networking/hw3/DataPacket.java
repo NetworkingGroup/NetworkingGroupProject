@@ -4,6 +4,7 @@ package networking.hw3;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.SocketTimeoutException;
 
 public class DataPacket extends Thread{
 
@@ -27,9 +28,9 @@ public class DataPacket extends Thread{
 
                 DatagramPacket ack = new DatagramPacket(b, b.length);
 
-                socket.send(packet);
+                socket.setSoTimeout(1000);
 
-                Thread.sleep(750);
+                socket.send(packet);
 
                 socket.receive(ack);
 
@@ -41,8 +42,8 @@ public class DataPacket extends Thread{
                     break;
                 }
 
-            } catch (InterruptedException IE) {
-                break;
+            } catch (SocketTimeoutException ste) {
+
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
