@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/NetworkingGroupProject.iml" filepath="$PROJECT_DIR$/.idea/NetworkingGroupProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/NetworkingGroupProject.iml" filepath="$PROJECT_DIR$/.idea/modules/NetworkingGroupProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/NetworkingGroupProject_main.iml" filepath="$PROJECT_DIR$/.idea/modules/NetworkingGroupProject_main.iml" group="NetworkingGroupProject" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/NetworkingGroupProject_test.iml" filepath="$PROJECT_DIR$/.idea/modules/NetworkingGroupProject_test.iml" group="NetworkingGroupProject" />
