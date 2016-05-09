@@ -12,6 +12,15 @@ public class Analytics {
 
     static Future future;
 
+    /**
+     * Gets a task from the youtube api, which is worked on over time.
+     * The task may be interrupted by other clients or canceled. All
+     * over which is handled.
+     * @param index Index of the chunk that is it going to be analyzed
+     * @return
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public long analyze (int index) throws ExecutionException, InterruptedException {
         YoutubeTask task = new YoutubeTask(index);
         future = threadpool.submit(task);
@@ -31,12 +40,18 @@ public class Analytics {
         return viewCount;
     }
 
-
+    /**
+     * A runnable class to launch the query and return a result.
+     */
     private class YoutubeTask implements Callable {
 
         int index = 0;
         Query query = new Query();
 
+        /**
+         * Calls a query on the youtube api analytics and gets back a view count.
+         * @param index Position of the chunk in the set that is being worked on
+         */
         public YoutubeTask(int index) {
             this.index = index;
         }
