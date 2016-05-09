@@ -16,7 +16,6 @@ public class Proposition {
         if(Main.log.get(chunkIndex) == -2l){
             //this means the chunk is free to be worked on
             Main.log.set(chunkIndex, -1l);
-            // // TODO look at this 
             Main.timers[chunkIndex] = System.currentTimeMillis();
             //should set timer for it
             return null;
@@ -47,5 +46,9 @@ public class Proposition {
         Main.log.set(chunkIndex, comp.getLong(13));
         Main.count++;
         return Integer.compare(chunkIndex, Main.currentChunk);
+    }
+
+    public static ByteBuffer sendData(int chunkIndex, long data){
+        return ByteBuffer.allocate(12).putInt(chunkIndex).putLong(data);
     }
 }

@@ -19,29 +19,39 @@ public class Main {
     static int maxIndex =  19; //user provided limit to the amount of data they want
     static long macAddress;
     static int count = 0;
+
     public static void main(String[] args) throws ExecutionException, InterruptedException, UnknownHostException, SocketException {
 
 
         Scanner sc = new Scanner(System.in);
 
-        int port = 2706;
+        int multiPort = 2706;
+        int singlePort = 7001;
         //each value result will go in here, -1 means the chunk is being worked on, -2 means it is free to be worked on
         log = new ArrayList<>();
         int host = 0;//host provided by the user, if there is none this machine is the first node in the cluster
 //        host = Integer.parseInt(args[0]);
         host = sc.nextInt();
-        MulticastSocket socket = null;
-        InetAddress ip = null;
+        MulticastSocket multiSocket = null;
+        InetAddress multiIP = null;
+        InetAddress singleIP = null;
+        DatagramSocket singleSocket = null;
+
+
         try {
-            ip = InetAddress.getByName("238.0.0.0");
+            multiIP = InetAddress.getByName("238.0.0.0");
+
+            singleIP = InetAddress.getByName("pi.cs.oswego.edu");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
 
         try {
-            socket = new MulticastSocket(port);
+            multiSocket = new MulticastSocket(multiPort);
 
-            socket.joinGroup(ip);
+            singleSocket = new DatagramSocket(singlePort);
+
+            multiSocket.joinGroup(multiIP);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -63,17 +73,17 @@ public class Main {
 
             byte [] receiveBytes = new byte[161];
 
-            DatagramPacket requestPacket = new DatagramPacket(requestBytes, requestBytes.length,ip, port);
+            DatagramPacket requestPacket = new DatagramPacket(requestBytes, requestBytes.length,multiIP, multiPort);
 
             DatagramPacket receivePacket = new DatagramPacket(receiveBytes, receiveBytes.length);
 
             for (;;){
                 try{
-                    socket.send(requestPacket);
+                    multiSocket.send(requestPacket);
 
-                    socket.setSoTimeout(1000);
+                    multiSocket.setSoTimeout(1000);
 
-                    socket.receive(receivePacket);
+                    multiSocket.receive(receivePacket);
 
                     int opCode = receivePacket.getData()[0];
 
@@ -89,7 +99,7 @@ public class Main {
         }
         Analytics a = new Analytics();
 
-        Listener listener = new Listener(socket,port, ip);
+        Listener listener = new Listener(multiSocket,multiPort, multiIP);
         //only stop if all the pending chunks are gone, all of the ready chunks are done
         while (log.contains(-1l) || log.contains(-2l)) {
             int toWorkOn = -1;
@@ -117,10 +127,10 @@ public class Main {
                 System.out.println( "working on " + toWorkOn);
                 byte [] propByte = Proposition.sendProp(toWorkOn).array();
 
-                DatagramPacket prop = new DatagramPacket(propByte,propByte.length,ip,port);
+                DatagramPacket prop = new DatagramPacket(propByte,propByte.length,multiIP,multiPort);
 
                 try {
-                    socket.send(prop);
+                    multiSocket.send(prop);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -130,12 +140,21 @@ public class Main {
                 System.out.println( "Result " + result);
                 if (result != -1){ //if it returned a -1 that means it was terminated early
                     log.set(toWorkOn, result);
+
+                    byte [] sendByte = Proposition.sendData(toWorkOn,log.get(toWorkOn)).array();
+
+                    DatagramPacket packet = new DatagramPacket(sendByte, sendByte.length, singleIP, singlePort);
+
+                    DataPacket dataPacket = new DataPacket(singleSocket, packet, toWorkOn);
+
+                    dataPacket.start();
+
                     byte [] compByte = Proposition.sendComp(toWorkOn, log.get(toWorkOn)).array();
 
-                    DatagramPacket comp = new DatagramPacket(compByte, compByte.length, ip, port);
+                    DatagramPacket comp = new DatagramPacket(compByte, compByte.length, multiIP, multiPort);
                     count++;
                     try {
-                        socket.send(comp);
+                        multiSocket.send(comp);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -147,12 +166,14 @@ public class Main {
         }
 
         try {
-            socket.leaveGroup(ip);
+            multiSocket.leaveGroup(multiIP);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        socket.close();
+        multiSocket.close();
+
+        singleSocket.close();
 
         listener.stopThread();
     }
