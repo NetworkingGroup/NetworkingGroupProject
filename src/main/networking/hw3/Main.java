@@ -21,8 +21,6 @@ public class Main {
     static int count = 0;
 
     public static void main(String[] args) throws ExecutionException, InterruptedException, UnknownHostException, SocketException {
-
-
         Scanner sc = new Scanner(System.in);
 
         int multiPort = 2706;
